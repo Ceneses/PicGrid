@@ -2,65 +2,68 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <title>Express API 测试</title>
+    <title>外部 API 代理测试</title>
     <style>
-        /* 简单加点样式 */
+        body { font-family: sans-serif; padding: 20px; }
         #result-area {
             margin-top: 20px;
-            padding: 10px;
-            border: 1px solid #ccc;
-            background-color: #f9f9f9;
-            display: none; /* 默认隐藏 */
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f0f8ff;
+            display: none;
+            max-width: 400px;
         }
+        .label { font-weight: bold; color: #333; }
     </style>
 </head>
 <body>
-<h1>前后端交互演示</h1>
+<h1>请求外部数据演示</h1>
+<p>点击按钮，你的服务器将去请求 jsonplaceholder 的数据并返回。</p>
 
-<!-- 按钮 -->
-<button id="fetch-btn">获取数据</button>
+<button id="fetch-btn">获取外部用户信息</button>
 
-<!-- 数据展示区域 -->
 <div id="result-area">
-    <p><strong>消息:</strong> <span id="msg"></span></p>
-    <p><strong>时间:</strong> <span id="time"></span></p>
-    <p><strong>ID:</strong> <span id="num"></span></p>
+    <p><span class="label">来源:</span> <span id="source" style="color:red"></span></p>
+    <p><span class="label">姓名:</span> <span id="name"></span></p>
+    <p><span class="label">邮箱:</span> <span id="email"></span></p>
+    <p><span class="label">公司:</span> <span id="company"></span></p>
+    <p><span class="label">网站:</span> <span id="website"></span></p>
 </div>
 
 <script>
-    // 获取页面元素
     const btn = document.getElementById('fetch-btn');
     const resultArea = document.getElementById('result-area');
-    const msgSpan = document.getElementById('msg');
-    const timeSpan = document.getElementById('time');
-    const numSpan = document.getElementById('num');
 
-    // 监听按钮点击事件
     btn.addEventListener('click', async () => {
+        // 按钮变更为“加载中...”
+        btn.innerText = '加载中...';
+        btn.disabled = true;
+
         try {
-            // 1. 向后端发起请求
-            const response = await fetch('/api/data');
+            // 请求我们自己的后端接口
+            const response = await fetch('/api/external-data');
 
-            // 判断请求是否成功
-            if (!response.ok) {
-                throw new Error('网络请求失败');
-            }
+            if (!response.ok) throw new Error('服务器报错');
 
-            // 2. 解析 JSON 数据
             const data = await response.json();
-            console.log('获取到的数据:', data);
 
-            // 3. 将数据更新到页面上
-            msgSpan.innerText = data.message;
-            timeSpan.innerText = data.timestamp;
-            numSpan.innerText = data.id;
+            // 更新 UI
+            document.getElementById('source').innerText = data.source;
+            document.getElementById('name').innerText = data.name;
+            document.getElementById('email').innerText = data.email;
+            document.getElementById('company').innerText = data.company;
+            document.getElementById('website').innerText = data.website;
 
-            // 显示结果区域
             resultArea.style.display = 'block';
 
         } catch (error) {
-            console.error('发生错误:', error);
-            alert('获取数据失败，请查看控制台');
+            alert('请求失败，请检查控制台');
+            console.error(error);
+        } finally {
+            // 恢复按钮状态
+            btn.innerText = '获取外部用户信息';
+            btn.disabled = false;
         }
     });
 </script>
