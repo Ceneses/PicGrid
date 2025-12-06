@@ -1,10 +1,68 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <title>Home</title>
+    <title>Express API 测试</title>
+    <style>
+        /* 简单加点样式 */
+        #result-area {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            background-color: #f9f9f9;
+            display: none; /* 默认隐藏 */
+        }
+    </style>
 </head>
 <body>
-主页
+<h1>前后端交互演示</h1>
+
+<!-- 按钮 -->
+<button id="fetch-btn">获取数据</button>
+
+<!-- 数据展示区域 -->
+<div id="result-area">
+    <p><strong>消息:</strong> <span id="msg"></span></p>
+    <p><strong>时间:</strong> <span id="time"></span></p>
+    <p><strong>ID:</strong> <span id="num"></span></p>
+</div>
+
+<script>
+    // 获取页面元素
+    const btn = document.getElementById('fetch-btn');
+    const resultArea = document.getElementById('result-area');
+    const msgSpan = document.getElementById('msg');
+    const timeSpan = document.getElementById('time');
+    const numSpan = document.getElementById('num');
+
+    // 监听按钮点击事件
+    btn.addEventListener('click', async () => {
+        try {
+            // 1. 向后端发起请求
+            const response = await fetch('/api/data');
+
+            // 判断请求是否成功
+            if (!response.ok) {
+                throw new Error('网络请求失败');
+            }
+
+            // 2. 解析 JSON 数据
+            const data = await response.json();
+            console.log('获取到的数据:', data);
+
+            // 3. 将数据更新到页面上
+            msgSpan.innerText = data.message;
+            timeSpan.innerText = data.timestamp;
+            numSpan.innerText = data.id;
+
+            // 显示结果区域
+            resultArea.style.display = 'block';
+
+        } catch (error) {
+            console.error('发生错误:', error);
+            alert('获取数据失败，请查看控制台');
+        }
+    });
+</script>
 </body>
 </html>
