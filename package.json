@@ -4,7 +4,9 @@
   "description": "a simple pic hosting",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
+    "start-vercel": "node index.js",
+    "start-leapcell": "node index.js",
+    "start-local": "node index.js",
     "test": "echo \"testing ...\""
   },
   "author": "",
