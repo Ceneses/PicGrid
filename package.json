@@ -1,0 +1,15 @@
+{
+  "name": "picgrid",
+  "version": "1.0.0",
+  "description": "a simple pic hosting",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"testing ...\""
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^5.2.1"
+  }
+}
